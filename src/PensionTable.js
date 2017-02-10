@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import $ from "jquery";
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
+import { browserHistory } from 'react-router';
+
 
 const options = {
   onRowClick: function(row) {
-    alert(`You click row id: ${row.email}`);
+      browserHistory.push('/pensions/' + row.id);
   }
 };
 
