@@ -6,7 +6,7 @@ import { browserHistory } from 'react-router';
 
 const options = {
   onRowClick: function(row) {
-      browserHistory.push('/pensions/' + row.id);
+      browserHistory.push('/pension/1')
   }
 };
 
@@ -21,7 +21,7 @@ class PensionTable extends Component {
   }
 
   PensionList() {
-    return $.getJSON('https://randomuser.me/api/')
+    return $.getJSON('https://randomuser.me/api/?results=15')
       .then((data) => {
         console.log(data)
         this.setState({ pensions: data.results });
