@@ -89,7 +89,7 @@ mainApp.controller("loginController",["$scope", "$routeParams", "$timeout", "$lo
 				loginScope.loading = false;
 				$cookies.put(COOKIE_LOGGED_IN, true);
 				$location.path("pensions");
-			}, 1200);
+			}, 1400);
 		}
 	}
 ]);
