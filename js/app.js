@@ -1,4 +1,5 @@
 var COOKIE_LOGGED_IN = "loggedIn";
+var COOKIE_USER_NAME = "username";
 var mainApp=angular.module("pensionApp",["ngRoute","ngCookies"]);
 
 var checkRouting = ["$cookies", "$location", function($cookies, $location) {
@@ -58,6 +59,7 @@ mainApp.controller("indexController",["$scope", "$routeParams", "$timeout", "$lo
 		indexScope.logout = function() {
 			indexScope.notLoggedIn = true;
 			$cookies.put(COOKIE_LOGGED_IN, false);
+			$cookies.put(COOKIE_USER_NAME, "");
 		}
 	}
 ]);
@@ -78,6 +80,7 @@ mainApp.controller("loginController",["$scope", "$routeParams", "$timeout", "$lo
 		loginScope.login = function() {
 			console.log("Loggingin")
 			loginScope.loading = true;
+			$cookies.put(COOKIE_USER_NAME, loginScope.username);
 			loginScope.username = "";
 			loginScope.password = "";
 			$timeout(function() {
@@ -85,16 +88,30 @@ mainApp.controller("loginController",["$scope", "$routeParams", "$timeout", "$lo
 				loginScope.loading = false;
 				$cookies.put(COOKIE_LOGGED_IN, true);
 				$location.path("pensions");
-			}, 1200);
+			}, 1400);
 		}
 	}
 ]);
 
-mainApp.controller("pensionsController",["$scope", "$routeParams", "$timeout", "$location", "$http",
-	function($scope, $routeParams, $timeout, $location, $http){
+mainApp.controller("pensionsController",["$scope", "$routeParams", "$timeout", "$location", "$http", "$cookies",
+	function($scope, $routeParams, $timeout, $location, $http, $cookies){
 		var pensionThis = this;
 		var pensionsScope = $scope;
 
+		pensionsScope.isCompany = (typeof($cookies.get(COOKIE_USER_NAME)) === "string" ? ($cookies.get(COOKIE_USER_NAME).toLowerCase().charAt(0) === 'c') : false);
+		if (pensionsScope.isCompany) {
+			pensionsScope.hidePen = {
+				first: "Active",
+				second: "InActive",
+				third: "Both"
+			}
+		} else {
+			pensionsScope.hidePen = {
+				first: "Savings",
+				second: "Income",
+				third: "Both"
+			}
+		}
 		pensionsScope.requestAll = function() {
 			pensionsScope.loading = true;
 			pensionsScope.loadSuccess = false;
@@ -131,6 +148,18 @@ mainApp.controller("pensionsController",["$scope", "$routeParams", "$timeout", "
 				pensionsScope.loading = false;
 			});
 		}
+		
+		pensionsScope.hidePension = "";
+
+		pensionsScope.hidePensions = function(state) {
+			pensionsScope.hidePension = state;
+		}
+
+		pensionsScope.getState = function(state) {
+			if (state) {
+				return pensionsScope.hidePen.second;
+			}
+			return pensionsScope.hidePen.first;
 
 		pensionsScope.requestCompStats = function() {
 			pensionsScope.loading = true;
