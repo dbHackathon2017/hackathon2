@@ -327,7 +327,7 @@ mainApp.controller("documentController",["$scope", "$routeParams", "loggedServic
 			.then(function successCallback(response) {
 				if (response.data.error === "none") {
 					console.log("Success Document callback, response data [" + JSON.stringify(response.data) + "]");
-					documentScope.transaction = response.data.content;
+					documentScope.document = response.data.content;
 
 					documentScope.loadSuccess = true;
 					$timeout(function() {
@@ -356,7 +356,7 @@ mainApp.controller("documentController",["$scope", "$routeParams", "loggedServic
 			documentScope.loading = false;
 			documentScope.loadSuccess = false;
 			documentScope.loadFailed = false;
-			documentScope.requestDocument(documentScope.transId, documentScope.documentId);
+			documentScope.requestDocument(documentScope.transId, documentScope.docId);
 			//FOR TESTING UNTIL API IS READY
 			documentScope.pension = [];
 		}
