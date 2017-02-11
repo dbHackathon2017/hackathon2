@@ -1,0 +1,11 @@
+table tbody tr:hover {
+	cursor: pointer;
+	background-color: #A8A8A8;
+}
+
+.green {
+	background-color: #7fff7f;
+	border: solid 1px #4cff4c;
+	color: #003300;
+	float: left;
+}
