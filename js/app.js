@@ -19,8 +19,8 @@ mainApp.config(['$routeProvider', '$locationProvider', function($routeProvider, 
 		controller : "pensionController",
 	})
 	.when("/pension/:id/:transId", {
-		templateUrl : "html/pension.html",
-		controller : "pensionController",
+		templateUrl : "html/transaction.html",
+		controller : "transactionController",
 	});
 	$locationProvider.html5Mode({
 		enabled: false,
@@ -182,9 +182,6 @@ mainApp.controller("pensionController",["$scope", "$routeParams", "loggedService
 				if (response.data.error === "none") {
 					console.log("Success Pension callback, response data [" + JSON.stringify(response.data) + "]");
 					pensionScope.pension = response.data.content;
-					console.clear()
-					console.log(JSON.stringify(pensionScope.pension.pension))
-
 					pensionScope.loadSuccess = true;
 					$timeout(function() {
 					    $scope.loadSuccess = false;
@@ -205,7 +202,7 @@ mainApp.controller("pensionController",["$scope", "$routeParams", "loggedService
 		}
 
 		pensionScope.goToTransaction = function (transaction) {
-			$location.path(location.href() + "/" + transaction)
+			$location.path($location.url() + "/" + transaction);
 		}
 
 
@@ -227,7 +224,8 @@ mainApp.controller("pensionController",["$scope", "$routeParams", "loggedService
 mainApp.controller("transactionController",["$scope", "$routeParams", "loggedService", "$timeout", "$location", "$http",
 	function($scope, $routeParams, loggedService, $timeout, $location, $http){
 		var transactionScope = $scope;
-		transactionScope.id = $routeParams.id
+		transactionScope.id = $routeParams.id;
+		transactionScope.transId = $routeParams.transId;
 
 		transactionScope.loggedIn = loggedService.loggedIn;
 		//Check if logged in else go back to root
@@ -235,23 +233,13 @@ mainApp.controller("transactionController",["$scope", "$routeParams", "loggedSer
 			$location.path("/")
 		}
 
-		transactionScope.hideShow = function() {
-			if(transactionScope.showSSN === "Show") {
-				transactionScope.showSSN = "Hide";
-				transactionScope.ssnValue = transactionScope.pension.header.ssn;
-			} else {
-				transactionScope.showSSN = "Show";
-				transactionScope.ssnValue = "****-****-****"; 
-			}
-		}
-
-		transactionScope.requestPension = function(id) {
+		transactionScope.requestTransaction = function(transId) {
 			transactionScope.loading = true;
 			transactionScope.loadSuccess = false;
 			transactionScope.loadFailed = false;
 			var json = {
-				"request": "pension",
-				"params": id,
+				"request": "transaction",
+				"params": transId,
 			}
 			$http({
 				'content-type': 'application/json; charset=UTF-8',
@@ -261,20 +249,18 @@ mainApp.controller("transactionController",["$scope", "$routeParams", "loggedSer
 			})
 			.then(function successCallback(response) {
 				if (response.data.error === "none") {
-					console.log("Success Pension callback, response data [" + JSON.stringify(response.data) + "]");
-					transactionScope.pension = response.data.content;
-					console.clear()
-					console.log(JSON.stringify(transactionScope.pension.pension))
+					console.log("Success Transaction callback, response data [" + JSON.stringify(response.data) + "]");
+					transactionScope.transaction = response.data.content;
 
 					transactionScope.loadSuccess = true;
 					$timeout(function() {
 					    $scope.loadSuccess = false;
 					}, 3000);
 				} else {
-					console.log("Error Pension callback, response data [" + JSON.stringify(response.data) + "]");
+					console.log("Error Transaction callback, response data [" + JSON.stringify(response.data) + "]");
 				}
 			  }, function errorCallback(response) {
-				console.log("Error Pension callback, response [" + response + "]");
+				console.log("Error Transaction callback, response [" + response + "]");
 				transactionScope.loadFailed = true;
 				$timeout(function() {
 				    $scope.loadFailed = false;
@@ -289,12 +275,35 @@ mainApp.controller("transactionController",["$scope", "$routeParams", "loggedSer
 			transactionScope.loading = false;
 			transactionScope.loadSuccess = false;
 			transactionScope.loadFailed = false;
-			transactionScope.hideShow();
-			transactionScope.requestPension(transactionScope.id);
+			transactionScope.requestTransaction(transactionScope.transId);
 			//FOR TESTING UNTIL API IS READY
 			transactionScope.pension = [];
 		}
 
-		pensionScope.initialize();
+		transactionScope.initialize();
 	}
 ]);
+
+mainApp.filter('cut', function () {
+        return function (value, wordwise, max, tail) {
+            if (!value) return '';
+
+            max = parseInt(max, 10);
+            if (!max) return value;
+            if (value.length <= max) return value;
+
+            value = value.substr(0, max);
+            if (wordwise) {
+                var lastspace = value.lastIndexOf(' ');
+                if (lastspace != -1) {
+                  //Also remove . and , so its gives a cleaner result.
+                  if (value.charAt(lastspace-1) == '.' || value.charAt(lastspace-1) == ',') {
+                    lastspace = lastspace - 1;
+                  }
+                  value = value.substr(0, lastspace);
+                }
+            }
+
+            return value + (tail || ' …');
+        };
+    });

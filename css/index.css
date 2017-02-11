@@ -132,3 +132,15 @@ body {
 .login-block button:hover {
     background: #ff7b81;
 }
+
+.col-md-12 column {  
+   text-align:center;
+}
+.col-md-12 column form {
+   display:inline-block;
+}
+
+.col-md-12 column form {
+   display:table;
+   margin:auto;
+}
