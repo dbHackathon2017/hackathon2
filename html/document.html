@@ -1,6 +1,6 @@
 <div class="container">
   <div class="row" style="text-align: center;">
-    <h2>Transaction Information</h2>
+    <h2>Document Information</h2>
   </div>
   <div class="row">
     <div class="col-md-3 column">
@@ -32,12 +32,12 @@
       <h3 class="form-control"><b>Factom Type:</b> {{transaction.factomtype}}</h3>
     </div>
     <div class="col-md-2 column">
-      <button ng-click="goBack()" class="btn" style="margin-top: 20px;">Back to Pension</button>
+      <button ng-click="goBack()" class="btn" style="margin-top: 20px;">Back to Document</button>
     </div>
   </div>
   <hr />
-  <p class="alert alert-info" ng-model="loading" ng-show="loading">Loading Pension...</p>
-  <p class="alert alert-success" ng-model="loadSuccess" ng-show="loadSuccess && !loading">Pensions loaded</p>
+  <p class="alert alert-info" ng-model="loading" ng-show="loading">Loading Document...</p>
+  <p class="alert alert-success" ng-model="loadSuccess" ng-show="loadSuccess && !loading">Document loaded</p>
   <p class="alert alert-success" ng-model="loadFailed" ng-show="loadFailed && !loading">Failed to load pensions</p>
   <table class="table">
     <thead>

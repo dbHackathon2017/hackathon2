@@ -10,10 +10,6 @@ mainApp.config(['$routeProvider', '$locationProvider', function($routeProvider, 
 		templateUrl : "html/pensions.html",
 		controller : "pensionsController",
 	})
-	.when("/pension/", {
-		templateUrl : "html/pension.html",
-		controller : "pensionController",
-	})
 	.when("/pension/:id", {
 		templateUrl : "html/pension.html",
 		controller : "pensionController",
@@ -21,6 +17,10 @@ mainApp.config(['$routeProvider', '$locationProvider', function($routeProvider, 
 	.when("/pension/:id/:transId", {
 		templateUrl : "html/transaction.html",
 		controller : "transactionController",
+	})
+	.when("/pension/:id/:transId/:docId", {
+		templateUrl : "html/document.html",
+		controller : "documentController",
 	});
 	$locationProvider.html5Mode({
 		enabled: false,
@@ -154,6 +154,11 @@ mainApp.controller("pensionController",["$scope", "$routeParams", "loggedService
 			$location.path("/")
 		}
 
+		pensionScope.goBack = function() {
+			$location.path("/pensions");
+		}
+
+
 		pensionScope.hideShow = function() {
 			if(pensionScope.showSSN === "Show") {
 				pensionScope.showSSN = "Hide";
@@ -221,7 +226,6 @@ mainApp.controller("pensionController",["$scope", "$routeParams", "loggedService
 	}
 ]);
 
-
 mainApp.controller("transactionController",["$scope", "$routeParams", "loggedService", "$timeout", "$location", "$http",
 	function($scope, $routeParams, loggedService, $timeout, $location, $http){
 		var transactionScope = $scope;
@@ -276,9 +280,8 @@ mainApp.controller("transactionController",["$scope", "$routeParams", "loggedSer
 			$location.path("/pension/" + transactionScope.id)
 		}
 
-		transactionScope.goToTransaction = function(transactionid) {
-			console.log(transactionid)
-			// $location.path("/pension/" + transactionScope.id)
+		transactionScope.goToDocument = function(documentId) {
+			$location.path("/pension/" + transactionScope.id + "/" + transactionScope.transId + "/" + documentId);
 		}
 
 		transactionScope.initialize = function() {
@@ -291,6 +294,74 @@ mainApp.controller("transactionController",["$scope", "$routeParams", "loggedSer
 		}
 
 		transactionScope.initialize();
+	}
+]);
+
+mainApp.controller("documentController",["$scope", "$routeParams", "loggedService", "$timeout", "$location", "$http",
+	function($scope, $routeParams, loggedService, $timeout, $location, $http){
+		var documentScope = $scope;
+		documentScope.id = $routeParams.id;
+		documentScope.transId = $routeParams.transId;
+		documentScope.docId = $routeParams.docId;
+
+		documentScope.loggedIn = loggedService.loggedIn;
+		//Check if logged in else go back to root
+		if (!documentScope.loggedIn) {
+			$location.path("/")
+		}
+
+		documentScope.requestDocument = function(transId, documentId) {
+			documentScope.loading = true;
+			documentScope.loadSuccess = false;
+			documentScope.loadFailed = false;
+			var json = {
+				"request": "transaction",
+				"params": transId + "/" + documentId,
+			}
+			$http({
+				'content-type': 'application/json; charset=UTF-8',
+				method: 'post',
+				url: 'http://localhost:1337/POST',
+				data: JSON.stringify(json)
+			})
+			.then(function successCallback(response) {
+				if (response.data.error === "none") {
+					console.log("Success Document callback, response data [" + JSON.stringify(response.data) + "]");
+					documentScope.transaction = response.data.content;
+
+					documentScope.loadSuccess = true;
+					$timeout(function() {
+					    $scope.loadSuccess = false;
+					}, 3000);
+				} else {
+					console.log("Error Document callback, response data [" + JSON.stringify(response.data) + "]");
+				}
+			  }, function errorCallback(response) {
+				console.log("Error Document callback, response [" + response + "]");
+				documentScope.loadFailed = true;
+				$timeout(function() {
+				    $scope.loadFailed = false;
+				}, 3000);
+			  })
+			.finally(function(){
+				documentScope.loading = false;
+			});
+		}
+
+		documentScope.goBack = function() {
+			$location.path("/pension/" + documentScope.id + "/" + documentScope.transId);
+		}
+
+		documentScope.initialize = function() {
+			documentScope.loading = false;
+			documentScope.loadSuccess = false;
+			documentScope.loadFailed = false;
+			documentScope.requestDocument(documentScope.transId, documentScope.documentId);
+			//FOR TESTING UNTIL API IS READY
+			documentScope.pension = [];
+		}
+
+		documentScope.initialize();
 	}
 ]);
 
