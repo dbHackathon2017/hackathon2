@@ -99,7 +99,7 @@ mainApp.controller("pensionsController",["$scope", "$routeParams", "loggedServic
 			}
 			$http({
 				'content-type': 'application/json; charset=UTF-8',
-				method: 'post', 
+				method: 'post',
 				url: 'http://localhost:1337/POST',
 				data: JSON.stringify(jsonTest)
 			})
@@ -160,7 +160,7 @@ mainApp.controller("pensionController",["$scope", "$routeParams", "loggedService
 				pensionScope.ssnValue = pensionScope.pension.header.ssn;
 			} else {
 				pensionScope.showSSN = "Show";
-				pensionScope.ssnValue = "****-****-****"; 
+				pensionScope.ssnValue = "****-****-****";
 			}
 		}
 
@@ -174,7 +174,7 @@ mainApp.controller("pensionController",["$scope", "$routeParams", "loggedService
 			}
 			$http({
 				'content-type': 'application/json; charset=UTF-8',
-				method: 'post', 
+				method: 'post',
 				url: 'http://localhost:1337/POST',
 				data: JSON.stringify(json)
 			})
@@ -202,6 +202,7 @@ mainApp.controller("pensionController",["$scope", "$routeParams", "loggedService
 		}
 
 		pensionScope.goToTransaction = function (transaction) {
+			console.log(transaction)
 			$location.path($location.url() + "/" + transaction);
 		}
 
@@ -243,7 +244,7 @@ mainApp.controller("transactionController",["$scope", "$routeParams", "loggedSer
 			}
 			$http({
 				'content-type': 'application/json; charset=UTF-8',
-				method: 'post', 
+				method: 'post',
 				url: 'http://localhost:1337/POST',
 				data: JSON.stringify(json)
 			})
@@ -273,6 +274,11 @@ mainApp.controller("transactionController",["$scope", "$routeParams", "loggedSer
 
 		transactionScope.goBack = function() {
 			$location.path("/pension/" + transactionScope.id)
+		}
+
+		transactionScope.goToTransaction = function(transactionid) {
+			console.log(transactionid)
+			// $location.path("/pension/" + transactionScope.id)
 		}
 
 		transactionScope.initialize = function() {

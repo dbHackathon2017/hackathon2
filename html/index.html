@@ -19,26 +19,31 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular-route.js"></script>
 
+  <!-- Sha256 Hash -->
+  <script src="../node_modules/js-sha256/build/sha256.min.js"></script>
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
+
   <!-- Local -->
   <link rel="stylesheet" href="../css/index.css">
   <link rel="stylesheet" href="../css/pensions.css">
   <script src="../js/app.js"></script>
 </head>
 <body ng-app="pensionApp">
-  <nav ng-controller="indexController" class="navbar navbar-default">
-    <div class="container-fluid">
-      <ul class="nav navbar-nav navbar-left">
-        <li id="nestEgg">
-          <a>NestEgg </a>
-        </li>
+  <nav ng-controller="indexController" class="navbar navbar-default bg-green navbar-static-top">
+    <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" id="nestEgg" href="#/pensions">NestEgg</a>
+        </div>
+        <ul class="nav navbar-nav">
         <li>
-          <a href="#/pensions">All Pensions</a>
+          <a href="#/pensions">Dashboard</a>
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
           <a href="#/" ng-if="loggedIn" ng-click="logout()">
-            <span class="glyphicon glyphicon-log-out">Logout</span>
+            <span class="glyphicon glyphicon-log-out"></span>
           </a>
         </li>
       </ul>

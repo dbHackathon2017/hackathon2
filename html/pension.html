@@ -1,8 +1,10 @@
 <link rel="stylesheet" href="../css/pension.css">
 
 <div class="container">
-  <div class="row" style="text-align: center;">
-    <h2>Pension Information</h2>
+  <div class="row">
+    <div class="container">
+        <h2>Pension Information</h2>
+    </div>
   </div>
   <div class="row">
     <div class="col-md-4 column">
@@ -59,9 +61,9 @@
   </div>
 </div>
 <hr />
-  <h3 class="alert alert-info" ng-model="loading" ng-show="loading">Loading Pension...</h3>
-  <h3 class="alert alert-success" ng-model="loadSuccess" ng-show="loadSuccess && !loading">Load Success :)</h3>
-  <h3 class="alert alert-success" ng-model="loadFailed" ng-show="loadFailed && !loading">Load Failed :(</h3>
+  <p class="alert alert-info" ng-model="loading" ng-show="loading">Loading Pension...</p>
+  <p class="alert alert-success" ng-model="loadSuccess" ng-show="loadSuccess && !loading">Pensions loaded</p>
+  <p class="alert alert-success" ng-model="loadFailed" ng-show="loadFailed && !loading">Failed to load pensions</p>
 <table class="table">
   <thead>
     <tr>

@@ -53,8 +53,8 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="d in transaction.docs" class="pensions" ng-click="goToTransaction(d.txid)">
-        <td>{{$index}}.<td>
+      <tr ng-repeat="d in transaction.docs" class="pensions" ng-click="goToTransaction(d.path)">
+        <td>{{$index}}.</td>
         <td>{{ d.hash | cut:true:20:'...'}}</td>
         <td>{{ d.location | cut:true:20:'...' }}</td>
         <td>{{ d.path | cut:true:20:'...'}}</td>
