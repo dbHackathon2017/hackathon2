@@ -5,14 +5,14 @@
 	<p>These are all the current pensions in the log for person</p>
 	<div class="row">
 		<div class="container">
-			<button class="btn btn-default form-group" ng-click="requestAll()">Refresh</button>
+			<p class="alert alert-info" ng-model="loading" ng-show="loading">Loading Pensions...</p>
+			<p class="alert alert-success" ng-model="loadSuccess" ng-show="loadSuccess && !loading">Pensions loaded</p>
+			<p class="alert alert-success" ng-model="loadFailed" ng-show="loadFailed && !loading">Failed to load pensions</p>
 		</div>
 	</div>
 	<div class="row">
 		<div class="container">
-			<p class="alert alert-info" ng-model="loading" ng-show="loading">Loading Pensions...</p>
-			<p class="alert alert-success" ng-model="loadSuccess" ng-show="loadSuccess && !loading">Pensions loaded</p>
-			<p class="alert alert-success" ng-model="loadFailed" ng-show="loadFailed && !loading">Failed to load pensions</p>
+			<button class="btn btn-default form-group pull-right" ng-click="requestAll()">Refresh</button>
 		</div>
 	</div>
 <div class="row">
