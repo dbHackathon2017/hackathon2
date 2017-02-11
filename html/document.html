@@ -14,7 +14,7 @@
   </div>
   <div class="row">
     <div class="col-md-12 column">
-      <h3 class="form-control"><b>Location:</b> {{document.location}}</h3>
+      <h3 class="form-control"><b>Location:</b> {{ document.location}}</h3>
     </div>
   </div>
   <div class="row">
@@ -30,9 +30,11 @@
       <button ng-click="goBack()" class="btn" style="margin-top: 20px;">Back to Transactions</button>
     </div>
   </div>
-  <hr />
   <p class="alert alert-info" ng-model="loading" ng-show="loading">Loading Document...</p>
   <p class="alert alert-success" ng-model="loadSuccess" ng-show="loadSuccess && !loading">Document loaded</p>
   <p class="alert alert-success" ng-model="loadFailed" ng-show="loadFailed && !loading">Failed to load pensions</p>
-  <embed src="{{document.path}}" width="800px" height="2100px" />
+  <hr />
+  <div class="row" style="text-align: center;">
+    <embed src="{{document.path}}" width="800px" height="1200px" />
+  </div>
 </div>

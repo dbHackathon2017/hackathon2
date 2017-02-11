@@ -21,7 +21,8 @@ mainApp.config(['$routeProvider', '$locationProvider', function($routeProvider, 
 	.when("/pension/:id/:transId/:docId", {
 		templateUrl : "html/document.html",
 		controller : "documentController",
-	});
+	})
+	.otherwise({ redirectTo: '/' });
 	$locationProvider.html5Mode({
 		enabled: false,
 		requireBase: false
@@ -105,7 +106,7 @@ mainApp.controller("pensionsController",["$scope", "$routeParams", "loggedServic
 			})
 			.then(function successCallback(response) {
 				if (response.data.error === "none") {
-					console.log("Success Pensions callback, response data [" + JSON.stringify(response.data) + "]");
+					console.log("Success Pensions callback");
 					pensionsScope.accounts = response.data.content.pensions;
 					pensionsScope.loadSuccess = true;
 					$timeout(function() {
@@ -185,7 +186,7 @@ mainApp.controller("pensionController",["$scope", "$routeParams", "loggedService
 			})
 			.then(function successCallback(response) {
 				if (response.data.error === "none") {
-					console.log("Success Pension callback, response data [" + JSON.stringify(response.data) + "]");
+					console.log("Success Pension callback");
 					pensionScope.pension = response.data.content;
 					pensionScope.loadSuccess = true;
 					$timeout(function() {
@@ -254,7 +255,7 @@ mainApp.controller("transactionController",["$scope", "$routeParams", "loggedSer
 			})
 			.then(function successCallback(response) {
 				if (response.data.error === "none") {
-					console.log("Success Transaction callback, response data [" + JSON.stringify(response.data) + "]");
+					console.log("Success Transaction callback");
 					transactionScope.transaction = response.data.content;
 
 					transactionScope.loadSuccess = true;
@@ -326,7 +327,7 @@ mainApp.controller("documentController",["$scope", "$routeParams", "loggedServic
 			})
 			.then(function successCallback(response) {
 				if (response.data.error === "none") {
-					console.log("Success Document callback, response data [" + JSON.stringify(response.data) + "]");
+					console.log("Success Document callback");
 					documentScope.document = response.data.content;
 
 					documentScope.loadSuccess = true;
@@ -357,8 +358,6 @@ mainApp.controller("documentController",["$scope", "$routeParams", "loggedServic
 			documentScope.loadSuccess = false;
 			documentScope.loadFailed = false;
 			documentScope.requestDocument(documentScope.transId, documentScope.docId);
-			//FOR TESTING UNTIL API IS READY
-			documentScope.pension = [];
 		}
 
 		documentScope.initialize();
