@@ -1,0 +1,65 @@
+<link rel="stylesheet" href="../css/pension.css">
+
+<div class="container">
+  <div class="row" style="text-align: center;">
+    <h2>Transaction Information</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-3 column">
+      <h3 class="form-control"><b>Actor:</b> {{transaction.actor}}</h3>
+    </div>
+    <div class="col-md-3 column">
+      <h3 class="form-control"><b>Time Stamp</b> {{transaction.timestamp}}</h3>
+    </div>
+    <div class="col-md-3 column">
+      <h3 class="form-control"><b>User Type:</b> {{transaction.usertype}}</h3>
+    </div>
+    <div class="col-md-3 column">
+      <h3 class="form-control"><b>Value Change:</b> {{transaction.valchange}}</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6 column">
+      <h3 class="form-control"><b>Pension:</b> {{transaction.pension}}</h3>
+    </div>
+    <div class="col-md-6 column">
+      <h3 class="form-control"><b>To Pension:</b> {{transaction.toPension}}</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6 column">
+      <h3 class="form-control"><b>Txid:</b> {{transaction.txid}}</h3>
+    </div>
+    <div class="col-md-3 column">
+      <h3 class="form-control"><b>Factom Type:</b> {{transaction.factomtype}}</h3>
+    </div>
+    <div class="col-md-2 column">
+      <button ng-click="goBack()" class="btn" style="margin-top: 20px;">Back to Pension</button>
+    </div>
+  </div>
+  <hr />
+  <h3 class="alert alert-info" ng-model="loading" ng-show="loading">Loading Pension...</h3>
+  <h3 class="alert alert-success" ng-model="loadSuccess" ng-show="loadSuccess && !loading">Load Success :)</h3>
+  <h3 class="alert alert-success" ng-model="loadFailed" ng-show="loadFailed && !loading">Load Failed :(</h3>
+  <table class="table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Hash</th>
+        <th>Location</th>
+        <th>Path</th>
+        <th>Source</th>
+        <th>Timestamp</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="d in transaction.docs" class="pensions" ng-click="goToTransaction(d.txid)">
+        <td>{{$index}}.<td>
+        <td>{{ d.hash | cut:true:20:'...'}}</td>
+        <td>{{ d.location | cut:true:20:'...' }}</td>
+        <td>{{ d.path | cut:true:20:'...'}}</td>
+        <td>{{ d.source | cut:true:20:'...'}}</td>
+        <td>{{ d.timestamp | cut:true:20:'...'}}</td>
+      </tr>
+    </table>
+  </div>
