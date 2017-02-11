@@ -41,6 +41,8 @@
   <p class="alert alert-success" ng-model="loadFailed" ng-show="loadFailed && !loading">Failed to load pensions</p>
   <hr />
   <div class="row" style="text-align: center;">
-    <embed src="{{document.path}}" width="800px" height="1200px" />
+    <object data="{{document.path}}" type="application/pdf" width="800px" height="1200px">
+      alt : <a href="{{document.path}}">{{document.path}}/a>
+    </object>
   </div>
 </div>
