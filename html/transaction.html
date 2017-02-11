@@ -7,7 +7,7 @@
       <h3 class="form-control"><b>Actor:</b> {{transaction.actor}}</h3>
     </div>
     <div class="col-md-3 column">
-      <h3 class="form-control"><b>Time Stamp</b> {{transaction.timestamp}}</h3>
+      <h3 class="form-control"><b>Time Stamp:</b> {{transaction.timestamp}}</h3>
     </div>
     <div class="col-md-3 column">
       <h3 class="form-control"><b>User Type:</b> {{transaction.usertype}}</h3>
@@ -51,7 +51,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="d in transaction.docs" class="pensions" ng-click="goToDocument(d.path)">
+      <tr ng-repeat="d in transaction.docs" class="pensions" ng-click="goToDocument(d.hash)">
         <td>{{$index}}.</td>
         <td>{{ d.hash | cut:true:20:'...'}}</td>
         <td>{{ d.location | cut:true:20:'...' }}</td>
