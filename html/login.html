@@ -3,11 +3,11 @@
       <h1>Login</h1>
       <input type="text" value="" placeholder="Username" id="username" ng-model="username">
       <input type="password" value="" placeholder="Password" id="password" ng-model="pass"/>
-      <button type="submit" ng-click="login()" ng-hide="(username.length === 0 || pass.length === 0)">Sign</button>
+      <button type="submit" ng-click="login()" ng-hide="(username.length === 0 || pass.length === 0)">Sign in</button>
     </div>
   </div>
   <div ng-show="loading" class="container-fluid">
-    <div style="width:100%; height:30%; margin-top: 20vh;"">  
+    <div style="width:100%; height:30%; margin-top: 20vh;"">
       <div class="center loader"></div>
     </div>
   </div>
