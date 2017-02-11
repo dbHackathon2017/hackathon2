@@ -1,4 +1,13 @@
-var mainApp=angular.module("pensionApp",["ngRoute"]);
+var COOKIE_LOGGED_IN = "loggedIn";
+var mainApp=angular.module("pensionApp",["ngRoute","ngCookies"]);
+
+var checkRouting = ["$cookies", "$location", function($cookies, $location) {
+	var val = ($cookies.get(COOKIE_LOGGED_IN) == null ? "false" : $cookies.get(COOKIE_LOGGED_IN));
+	if (val === "false") {
+		$location.path("/");
+	}
+	return true;
+}];
 
 mainApp.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
 	$routeProvider
@@ -9,18 +18,30 @@ mainApp.config(['$routeProvider', '$locationProvider', function($routeProvider, 
 	.when("/pensions", {
 		templateUrl : "html/pensions.html",
 		controller : "pensionsController",
+		resolve: {
+	            factory: checkRouting
+                }
 	})
 	.when("/pension/:id", {
 		templateUrl : "html/pension.html",
 		controller : "pensionController",
+		resolve: {
+	            factory: checkRouting
+                }
 	})
 	.when("/pension/:id/:transId", {
 		templateUrl : "html/transaction.html",
 		controller : "transactionController",
+		resolve: {
+	            factory: checkRouting
+                }
 	})
 	.when("/pension/:id/:transId/:docId", {
 		templateUrl : "html/document.html",
 		controller : "documentController",
+		resolve: {
+	            factory: checkRouting
+                }
 	})
 	.otherwise({ redirectTo: '/' });
 	$locationProvider.html5Mode({
@@ -29,36 +50,27 @@ mainApp.config(['$routeProvider', '$locationProvider', function($routeProvider, 
 	});
 }]);
 
-mainApp.service('loggedService', function() {
-	var thisService = this;
-	this.loggedIn = true;
-	this.getData = function() {
-		return thisService.loggedIn;
-	}
-});
-
-mainApp.controller("indexController",["$scope", "$routeParams", "loggedService", "$timeout", "$location",
-	function($scope, $routeParams, loggedService, $timeout, $location){
+mainApp.controller("indexController",["$scope", "$routeParams", "$timeout", "$location", "$cookies",
+	function($scope, $routeParams, $timeout, $location, $cookies){
 		var indexScope = $scope;
-		indexScope.loggedIn = loggedService.loggedIn;
+		indexScope.notLoggedIn = false;
+
 		indexScope.logout = function() {
-			indexScope.loggedIn = false;
-			loggedService.loggedIn = indexScope.loggedIn;
+			indexScope.notLoggedIn = true;
+			$cookies.put(COOKIE_LOGGED_IN, false);
 		}
-		indexScope.$watch(function() { return loggedService.getData(); }, function(newVal) {
-			console.log("NEW VAL [" + newVal + "]");
-		    indexScope.loggedIn = newVal;
-		}, true);
 	}
 ]);
 
-mainApp.controller("loginController",["$scope", "$routeParams", "loggedService", "$timeout", "$location",
-	function($scope, $routeParams, loggedService, $timeout, $location){
+mainApp.controller("loginController",["$scope", "$routeParams", "$timeout", "$location", '$cookies',
+	function($scope, $routeParams, $timeout, $location, $cookies) {
 		var loginScope = $scope;
-		loginScope.loggedIn = loggedService.loggedIn;
-		console.log("Login loggedIn[" + loginScope.loggedIn + "]");
-		if (loginScope.loggedIn) {
-			$location.path("pensions")
+		var val = ($cookies.get(COOKIE_LOGGED_IN) == null ? "false" : $cookies.get(COOKIE_LOGGED_IN));
+		if (val === "true") {
+			loginScope.$parent.notLoggedIn = false;
+			$location.path("pensions");
+		} else {
+			loginScope.$parent.notLoggedIn = true;
 		}
 		loginScope.username = "";
 		loginScope.pass = "";
@@ -69,26 +81,19 @@ mainApp.controller("loginController",["$scope", "$routeParams", "loggedService",
 			loginScope.username = "";
 			loginScope.password = "";
 			$timeout(function() {
+				loginScope.$parent.notLoggedIn = false;
 				loginScope.loading = false;
-				loginScope.loggedIn = true;
-				loggedService.loggedIn = loginScope.loggedIn;
-				console.log(loggedService.loggedIn);
-				$location.path("pensions")
+				$cookies.put(COOKIE_LOGGED_IN, true);
+				$location.path("pensions");
 			}, 1200);
 		}
 	}
 ]);
 
-mainApp.controller("pensionsController",["$scope", "$routeParams", "loggedService", "$timeout", "$location", "$http",
-	function($scope, $routeParams, loggedService, $timeout, $location, $http){
+mainApp.controller("pensionsController",["$scope", "$routeParams", "$timeout", "$location", "$http",
+	function($scope, $routeParams, $timeout, $location, $http){
 		var pensionThis = this;
 		var pensionsScope = $scope;
-
-		pensionsScope.loggedIn = loggedService.loggedIn;
-		//Check if logged in else go back to root
-		if (!pensionsScope.loggedIn) {
-			$location.path("/")
-		}
 
 		pensionsScope.requestAll = function() {
 			pensionsScope.loading = true;
@@ -144,16 +149,10 @@ mainApp.controller("pensionsController",["$scope", "$routeParams", "loggedServic
 	}
 ]);
 
-mainApp.controller("pensionController",["$scope", "$routeParams", "loggedService", "$timeout", "$location", "$http",
-	function($scope, $routeParams, loggedService, $timeout, $location, $http){
+mainApp.controller("pensionController",["$scope", "$routeParams", "$timeout", "$location", "$http",
+	function($scope, $routeParams, $timeout, $location, $http){
 		var pensionScope = $scope;
 		pensionScope.id = $routeParams.id
-
-		pensionScope.loggedIn = loggedService.loggedIn;
-		//Check if logged in else go back to root
-		if (!pensionScope.loggedIn) {
-			$location.path("/")
-		}
 
 		pensionScope.goBack = function() {
 			$location.path("/pensions");
@@ -227,17 +226,11 @@ mainApp.controller("pensionController",["$scope", "$routeParams", "loggedService
 	}
 ]);
 
-mainApp.controller("transactionController",["$scope", "$routeParams", "loggedService", "$timeout", "$location", "$http",
-	function($scope, $routeParams, loggedService, $timeout, $location, $http){
+mainApp.controller("transactionController",["$scope", "$routeParams", "$timeout", "$location", "$http",
+	function($scope, $routeParams, $timeout, $location, $http){
 		var transactionScope = $scope;
 		transactionScope.id = $routeParams.id;
 		transactionScope.transId = $routeParams.transId;
-
-		transactionScope.loggedIn = loggedService.loggedIn;
-		//Check if logged in else go back to root
-		if (!transactionScope.loggedIn) {
-			$location.path("/")
-		}
 
 		transactionScope.requestTransaction = function(transId) {
 			transactionScope.loading = true;
@@ -298,18 +291,12 @@ mainApp.controller("transactionController",["$scope", "$routeParams", "loggedSer
 	}
 ]);
 
-mainApp.controller("documentController",["$scope", "$routeParams", "loggedService", "$timeout", "$location", "$http",
-	function($scope, $routeParams, loggedService, $timeout, $location, $http){
+mainApp.controller("documentController",["$scope", "$routeParams", "$timeout", "$location", "$http",
+	function($scope, $routeParams, $timeout, $location, $http){
 		var documentScope = $scope;
 		documentScope.id = $routeParams.id;
 		documentScope.transId = $routeParams.transId;
 		documentScope.docId = $routeParams.docId;
-
-		documentScope.loggedIn = loggedService.loggedIn;
-		//Check if logged in else go back to root
-		if (!documentScope.loggedIn) {
-			$location.path("/")
-		}
 
 		documentScope.requestDocument = function(transId, documentId) {
 			documentScope.loading = true;

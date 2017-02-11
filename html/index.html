@@ -18,6 +18,7 @@
   <!-- Angular -->
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular-route.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular-cookies.min.js"></script>
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
   <!-- Sha256 Hash -->
@@ -30,8 +31,8 @@
   <link rel="stylesheet" href="../css/pensions.css">
   <script src="../js/app.js"></script>
 </head>
-<body ng-app="pensionApp">
-  <nav ng-controller="indexController" class="navbar navbar-default bg-green navbar-static-top">
+<body ng-app="pensionApp" ng-controller="indexController">
+  <nav class="navbar navbar-default bg-green navbar-static-top">
     <div class="container">
         <div class="navbar-header">
           <a class="navbar-brand" id="nestEgg" href="#/pensions">NestEgg</a>
@@ -43,7 +44,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-          <a href="#/" ng-if="loggedIn" ng-click="logout()">
+          <a href="#/" ng-hide="notLoggedIn" ng-click="logout()">
             <span class="glyphicon glyphicon-log-out"></span>
           </a>
         </li>
