@@ -148,7 +148,7 @@ mainApp.controller("pensionsController",["$scope", "$routeParams", "$timeout", "
 				pensionsScope.loading = false;
 			});
 		}
-
+		
 		pensionsScope.hidePension = "";
 
 		pensionsScope.hidePensions = function(state) {
@@ -160,6 +160,42 @@ mainApp.controller("pensionsController",["$scope", "$routeParams", "$timeout", "
 				return pensionsScope.hidePen.second;
 			}
 			return pensionsScope.hidePen.first;
+
+		pensionsScope.requestCompStats = function() {
+			pensionsScope.loading = true;
+			pensionsScope.loadSuccess = false;
+			pensionsScope.loadFailed = false;
+			var jsonTest = {
+				"request": "company-stats",
+				"data": "",
+			}
+			$http({
+				'content-type': 'application/json; charset=UTF-8',
+				method: 'post',
+				url: 'http://localhost:1337/POST',
+				data: JSON.stringify(jsonTest)
+			})
+			.then(function successCallback(response) {
+				if (response.data.error === "none") {
+					console.log("Success Pensions callback");
+					pensionsScope.company = response.data.content;
+					pensionsScope.loadSuccess = true;
+					$timeout(function() {
+						$scope.loadSuccess = false;
+					}, 3000);
+				} else {
+					console.log("Error Pensions callback, response data [" + JSON.stringify(response.data) + "]");
+				}
+			  }, function errorCallback(response) {
+				console.log("Error Pensions callback, response [" + response + "]");
+				pensionsScope.loadFailed = true;
+				$timeout(function() {
+				    $scope.loadFailed = false;
+				}, 3000);
+			  })
+			.finally(function(){
+				pensionsScope.loading = false;
+			});
 		}
 
 		pensionsScope.goToPension = function (acct) {
@@ -171,6 +207,7 @@ mainApp.controller("pensionsController",["$scope", "$routeParams", "$timeout", "
 			pensionsScope.loadSuccess = false;
 			pensionsScope.loadFailed = false;
 			pensionsScope.requestAll();
+			pensionsScope.requestCompStats();
 			//FOR TESTING UNTIL API IS READY
 			pensionsScope.accounts = [];
 		}

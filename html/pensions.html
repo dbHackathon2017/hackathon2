@@ -1,5 +1,22 @@
 <div class="container">
-	<h1>PUT COMPANY STATS HERE</h1>
+	<h1>{{company.company}}</h1>
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>Total Pensions</th>
+				<th>Total Transactions</th>
+				<th>Total Value</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>{{company.totalpension}}</td>
+				<td>{{company.totaltransaction}}</td>
+				<td>{{company.value}}</td>
+			</tr>
+
+		</table>
+
 	<hr/>
 	<h2>Pensions</h2>
 	<p>These are all the current pensions in the log for person</p>
