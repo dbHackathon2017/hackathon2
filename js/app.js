@@ -81,6 +81,7 @@ mainApp.controller("loginController",["$scope", "$routeParams", "$timeout", "$lo
 			console.log("Loggingin")
 			loginScope.loading = true;
 			$cookies.put(COOKIE_USER_NAME, loginScope.username);
+			loginScope.$parent.isCompany = (typeof($cookies.get(COOKIE_USER_NAME)) === "string" ? ($cookies.get(COOKIE_USER_NAME).toLowerCase().charAt(0) === 'c') : false);
 			loginScope.username = "";
 			loginScope.password = "";
 			$timeout(function() {
@@ -98,8 +99,7 @@ mainApp.controller("pensionsController",["$scope", "$routeParams", "$timeout", "
 		var pensionThis = this;
 		var pensionsScope = $scope;
 
-		pensionsScope.isCompany = (typeof($cookies.get(COOKIE_USER_NAME)) === "string" ? ($cookies.get(COOKIE_USER_NAME).toLowerCase().charAt(0) === 'c') : false);
-		if (pensionsScope.isCompany) {
+		if (pensionsScope.$parent.isCompany) {
 			pensionsScope.hidePen = {
 				first: "InActive",
 				second: "Active",
