@@ -101,8 +101,8 @@ mainApp.controller("pensionsController",["$scope", "$routeParams", "$timeout", "
 		pensionsScope.isCompany = (typeof($cookies.get(COOKIE_USER_NAME)) === "string" ? ($cookies.get(COOKIE_USER_NAME).toLowerCase().charAt(0) === 'c') : false);
 		if (pensionsScope.isCompany) {
 			pensionsScope.hidePen = {
-				first: "Active",
-				second: "InActive",
+				first: "InActive",
+				second: "Active",
 				third: "Both"
 			}
 		} else {
@@ -148,7 +148,7 @@ mainApp.controller("pensionsController",["$scope", "$routeParams", "$timeout", "
 				pensionsScope.loading = false;
 			});
 		}
-		
+
 		pensionsScope.hidePension = "";
 
 		pensionsScope.hidePensions = function(state) {
@@ -160,6 +160,7 @@ mainApp.controller("pensionsController",["$scope", "$routeParams", "$timeout", "
 				return pensionsScope.hidePen.second;
 			}
 			return pensionsScope.hidePen.first;
+		}
 
 		pensionsScope.requestCompStats = function() {
 			pensionsScope.loading = true;
