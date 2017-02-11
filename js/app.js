@@ -271,6 +271,10 @@ mainApp.controller("transactionController",["$scope", "$routeParams", "loggedSer
 			});
 		}
 
+		transactionScope.goBack = function() {
+			$location.path("/pension/" + transactionScope.id)
+		}
+
 		transactionScope.initialize = function() {
 			transactionScope.loading = false;
 			transactionScope.loadSuccess = false;
