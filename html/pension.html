@@ -1,36 +1,85 @@
-<div class="container">
-  <h1>PUT COMPANY STATS HERE</h1>
-  <hr/>
-  <h2>Pensions</h2>
-  <p>These are all the current pensions in the log for person</p>
-  <h3 class="alert alert-info" ng-model="loading" ng-if="loading">Loading Pensions...</h3>  
-  <h3 class="alert alert-info" ng-model="loading" style="transition: 1s linear all;  
-  opacity: 1;" ng-if="loading">Load Success!</h3>
+<link rel="stylesheet" href="../css/pension.css">
 
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Firstname</th>
-        <th>Lastname</th>
-        <th>Account Number</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>John</td>
-        <td>Doe</td>
-        <td>account #</td>
-      </tr>
-      <tr>
-        <td>Mary</td>
-        <td>Moe</td>
-        <td>account #</td>
-      </tr>
-      <tr>
-        <td>July</td>
-        <td>Dooley</td>
-        <td>address</td>
-      </tr>
-    </tbody>
+<div class="container">
+  <div class="row" style="text-align: center;">
+    <h2>Account Information</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-4 column">
+      <h3 class="form-control"><b>Account:</b> {{pension.header.acct}}</h3>
+    </div>
+    <div class="col-md-4 column">
+      <h3 class="form-control"><b>Last Date Updated:</b> {{pension.header.lastint}}</h3>
+    </div>
+    <div class="col-md-4 column">
+      <h3 class="form-control"><b>Phone:</b> {{pension.header.phone}}</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4 column">
+      <h3 class="form-control"><b>Last Name:</b> {{pension.header.lastname}}</h3>
+    </div>
+    <div class="col-md-4 column">
+      <h3 class="form-control"><b>First Name:</b> {{pension.header.firstname}}</h3>
+    </div>
+    <div class="col-md-3 column">
+      <h3 class="form-control" ng-model="ssnValue">
+        <b>SSN:</b> {{ssnValue}}
+      </h3>
+    </div>
+    <div class="col-md-1 column">
+      <button class="btn btn-group-xs" style="margin-top: 20px;" ng-click="hideShow()">{{showSSN}}</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8 column">
+      <h3 class="form-control"><b>ID:</b> {{pension.header.id}}</h3>
+    </div>
+    <div class="col-md-4 column">
+      <h3 class="form-control"><b>ID:</b> {{pension.header.value}}</h3>
+    </div>
+  </div>
+  <hr />
+  <div class="row clearfix">
+    <div class="col-md-8 col-md-offset-2 column">
+      <form role="form">
+        <div class="form-group">
+         <input type="text" class="form-control" placeholder="Search..."/>
+       </div>
+     </form>
+   </div>
+ </div>
+ <div class="row clearfix">
+  <div class="col-md-3 col-md-offset-5 column">
+    <form role="form">
+      <div class="form-group">
+        <button class="btn form-group">Search</button>
+      </div>
+    </form>
+  </div>
+</div>
+<hr />
+  <h3 class="alert alert-info" ng-model="loading" ng-show="loading">Loading Pensions...</h3>
+  <h3 class="alert alert-success" ng-model="loadSuccess" ng-show="loadSuccess && !loading">Load Success :)</h3>
+  <h3 class="alert alert-success" ng-model="loadFailed" ng-show="loadFailed && !loading">Load Failed :(</h3>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Timestamp</th>
+      <th>Hash</th>
+      <th>Transaction Type</th>
+      <th>Value Change</th>
+      <th>Doc Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="d in pension.pension.transactions" class="pensions" ng-click="goToTransaction(d.txid)">
+      <td>{{ d.timestamp }}</td>
+      <td>{{ d.txid }}</td>
+      <td>{{ d.usertype }}</td>
+      <td>{{ d.valchange }}</td>
+      <td>{{ d.docs.length }}</td>
+    </tr>
   </table>
+</ul>
 </div>

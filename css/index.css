@@ -18,6 +18,21 @@
   100% { transform: rotate(360deg); }
 }
 
+/* Standard syntax */
+@keyframes nestEgg {
+    0%   {left:0px; top:0px;}
+    50%  {left:10px; top:0px; transform: translateX(-25%) rotate(-5deg);}
+    75% {left:0px; top:0px; transform: translateX(25%) rotate(5deg);}
+    100% {left:0px; top:0px;}
+}
+
+#nestEgg:hover{
+    position: relative;
+    animation-name: nestEgg;
+    animation-duration: 2s;
+    cursor: pointer;
+}
+
 .center {
     display: table;
     margin: 0 auto; 
@@ -26,6 +41,11 @@
 body {
     background-size: cover;
     font-family: Montserrat;
+}
+
+.container-fluid {
+    padding-left: 20vw;
+    font-size: 2em;
 }
 
 .logo {

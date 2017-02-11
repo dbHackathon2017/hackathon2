@@ -1,4 +1,4 @@
-table tbody tr:hover {
+.pensions:hover {
 	cursor: pointer;
 	background-color: #A8A8A8;
 }
@@ -7,5 +7,19 @@ table tbody tr:hover {
 	background-color: #7fff7f;
 	border: solid 1px #4cff4c;
 	color: #003300;
-	float: left;
+}
+
+.animate-show-hide.ng-hide {
+  opacity: 0;
+}
+
+.animate-show-hide.ng-hide-add,
+.animate-show-hide.ng-hide-remove {
+  transition: all linear 2.0s;
+}
+
+.check-element {
+  border: 1px solid black;
+  opacity: 1;
+  padding: 10px;
 }

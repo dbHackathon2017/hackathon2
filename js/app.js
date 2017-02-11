@@ -6,9 +6,21 @@ mainApp.config(['$routeProvider', '$locationProvider', function($routeProvider, 
 		templateUrl : "html/login.html",
 		controller : "loginController",
 	})
-	.when("/pension", {
+	.when("/pensions", {
 		templateUrl : "html/pensions.html",
 		controller : "pensionsController",
+	})
+	.when("/pension/", {
+		templateUrl : "html/pension.html",
+		controller : "pensionController",
+	})
+	.when("/pension/:id", {
+		templateUrl : "html/pension.html",
+		controller : "pensionController",
+	})
+	.when("/pension/:id/:transId", {
+		templateUrl : "html/pension.html",
+		controller : "pensionController",
 	});
 	$locationProvider.html5Mode({
 		enabled: false,
@@ -45,7 +57,7 @@ mainApp.controller("loginController",["$scope", "$routeParams", "loggedService",
 		loginScope.loggedIn = loggedService.loggedIn;
 		console.log("Login loggedIn[" + loginScope.loggedIn + "]");
 		if (loginScope.loggedIn) {
-			$location.path("pension")
+			$location.path("pensions")
 		}
 		loginScope.username = "";
 		loginScope.pass = "";
@@ -60,7 +72,7 @@ mainApp.controller("loginController",["$scope", "$routeParams", "loggedService",
 				loginScope.loggedIn = true;
 				loggedService.loggedIn = loginScope.loggedIn;
 				console.log(loggedService.loggedIn);
-				$location.path("pension")
+				$location.path("pensions")
 			}, 1200);
 		}
 	}
@@ -69,7 +81,72 @@ mainApp.controller("loginController",["$scope", "$routeParams", "loggedService",
 mainApp.controller("pensionsController",["$scope", "$routeParams", "loggedService", "$timeout", "$location", "$http",
 	function($scope, $routeParams, loggedService, $timeout, $location, $http){
 		var pensionThis = this;
+		var pensionsScope = $scope;
+
+		pensionsScope.loggedIn = loggedService.loggedIn;
+		//Check if logged in else go back to root
+		if (!pensionsScope.loggedIn) {
+			$location.path("/")
+		}
+
+		pensionsScope.requestAll = function() {
+			pensionsScope.loading = true;
+			pensionsScope.loadSuccess = false;
+			pensionsScope.loadFailed = false;
+			var jsonTest = {
+				"request": "all-pensions",
+				"data": "",
+			}
+			$http({
+				'content-type': 'application/json; charset=UTF-8',
+				method: 'post', 
+				url: 'http://localhost:1337/POST',
+				data: JSON.stringify(jsonTest)
+			})
+			.then(function successCallback(response) {
+				if (response.data.error === "none") {
+					console.log("Success Pensions callback, response data [" + JSON.stringify(response.data) + "]");
+					pensionsScope.accounts = response.data.content.pensions;
+					pensionsScope.loadSuccess = true;
+					$timeout(function() {
+						$scope.loadSuccess = false;
+					}, 3000);
+				} else {
+					console.log("Error Pensions callback, response data [" + JSON.stringify(response.data) + "]");
+				}
+			  }, function errorCallback(response) {
+				console.log("Error Pensions callback, response [" + response + "]");
+				pensionsScope.loadFailed = true;
+				$timeout(function() {
+				    $scope.loadFailed = false;
+				}, 3000);
+			  })
+			.finally(function(){
+				pensionsScope.loading = false;
+			});
+		}
+
+		pensionsScope.goToPension = function (acct) {
+			$location.path("/pension/" + acct)
+		}
+
+		pensionsScope.initialize = function() {
+			pensionsScope.loading = false;
+			pensionsScope.loadSuccess = false;
+			pensionsScope.loadFailed = false;
+			pensionsScope.requestAll();
+			//FOR TESTING UNTIL API IS READY
+			pensionsScope.accounts = [];
+		}
+
+		pensionsScope.initialize();
+	}
+]);
+
+mainApp.controller("pensionController",["$scope", "$routeParams", "loggedService", "$timeout", "$location", "$http",
+	function($scope, $routeParams, loggedService, $timeout, $location, $http){
 		var pensionScope = $scope;
+		pensionScope.id = $routeParams.id
 
 		pensionScope.loggedIn = loggedService.loggedIn;
 		//Check if logged in else go back to root
@@ -77,47 +154,145 @@ mainApp.controller("pensionsController",["$scope", "$routeParams", "loggedServic
 			$location.path("/")
 		}
 
-		// pensionScope.requestAll = function() {
-		// 	$http.jsonp({method: 'GET', url: 'localhost:1337' + "callback=JSON_CALLBACK"})
-		// 	.then(function successCallback(response) {
-		// 		console.log("Success callback, response [" + response + "]");
+		pensionScope.hideShow = function() {
+			if(pensionScope.showSSN === "Show") {
+				pensionScope.showSSN = "Hide";
+				pensionScope.ssnValue = pensionScope.pension.header.ssn;
+			} else {
+				pensionScope.showSSN = "Show";
+				pensionScope.ssnValue = "****-****-****"; 
+			}
+		}
 
-		// 	  }, function errorCallback(response) {
-		// 		console.log("Error callback, response [" + response + "]");
-		// 	  });
-		// }
+		pensionScope.requestPension = function(id) {
+			pensionScope.loading = true;
+			pensionScope.loadSuccess = false;
+			pensionScope.loadFailed = false;
+			var json = {
+				"request": "pension",
+				"params": id,
+			}
+			$http({
+				'content-type': 'application/json; charset=UTF-8',
+				method: 'post', 
+				url: 'http://localhost:1337/POST',
+				data: JSON.stringify(json)
+			})
+			.then(function successCallback(response) {
+				if (response.data.error === "none") {
+					console.log("Success Pension callback, response data [" + JSON.stringify(response.data) + "]");
+					pensionScope.pension = response.data.content;
+					console.clear()
+					console.log(JSON.stringify(pensionScope.pension.pension))
+
+					pensionScope.loadSuccess = true;
+					$timeout(function() {
+					    $scope.loadSuccess = false;
+					}, 3000);
+				} else {
+					console.log("Error Pension callback, response data [" + JSON.stringify(response.data) + "]");
+				}
+			  }, function errorCallback(response) {
+				console.log("Error Pension callback, response [" + response + "]");
+				pensionScope.loadFailed = true;
+				$timeout(function() {
+				    $scope.loadFailed = false;
+				}, 3000);
+			  })
+			.finally(function(){
+				pensionScope.loading = false;
+			});
+		}
+
+		pensionScope.goToTransaction = function (transaction) {
+			$location.path(location.href() + "/" + transaction)
+		}
+
 
 		pensionScope.initialize = function() {
-			// pensionScope.requestAll();
-			pensionScope.loading = true;
+			pensionScope.loading = false;
+			pensionScope.loadSuccess = false;
+			pensionScope.loadFailed = false;
+			pensionScope.hideShow();
+			pensionScope.requestPension(pensionScope.id);
 			//FOR TESTING UNTIL API IS READY
-			pensionScope.accounts = [
-				{
-					firstname: "bob",
-					lastname: "yessir",
-					acct: "1532146146"
-				},
-				{
-					firstname: "ff",
-					lastname: "asdf",
-					acct: "5673456357"
-				},
-				{
-					firstname: "ashasdgdf",
-					lastname: "asdf",
-					acct: "245624573567"
-				},
-				{
-					firstname: "aaa",
-					lastname: "bbbb",
-					acct: "2346236"
-				},
-				{
-					firstname: "bob",
-					lastname: "yessir",
-					acct: "347345737"
-				},
-			]
+			pensionScope.pension = [];
+		}
+
+		pensionScope.initialize();
+	}
+]);
+
+
+mainApp.controller("transactionController",["$scope", "$routeParams", "loggedService", "$timeout", "$location", "$http",
+	function($scope, $routeParams, loggedService, $timeout, $location, $http){
+		var transactionScope = $scope;
+		transactionScope.id = $routeParams.id
+
+		transactionScope.loggedIn = loggedService.loggedIn;
+		//Check if logged in else go back to root
+		if (!transactionScope.loggedIn) {
+			$location.path("/")
+		}
+
+		transactionScope.hideShow = function() {
+			if(transactionScope.showSSN === "Show") {
+				transactionScope.showSSN = "Hide";
+				transactionScope.ssnValue = transactionScope.pension.header.ssn;
+			} else {
+				transactionScope.showSSN = "Show";
+				transactionScope.ssnValue = "****-****-****"; 
+			}
+		}
+
+		transactionScope.requestPension = function(id) {
+			transactionScope.loading = true;
+			transactionScope.loadSuccess = false;
+			transactionScope.loadFailed = false;
+			var json = {
+				"request": "pension",
+				"params": id,
+			}
+			$http({
+				'content-type': 'application/json; charset=UTF-8',
+				method: 'post', 
+				url: 'http://localhost:1337/POST',
+				data: JSON.stringify(json)
+			})
+			.then(function successCallback(response) {
+				if (response.data.error === "none") {
+					console.log("Success Pension callback, response data [" + JSON.stringify(response.data) + "]");
+					transactionScope.pension = response.data.content;
+					console.clear()
+					console.log(JSON.stringify(transactionScope.pension.pension))
+
+					transactionScope.loadSuccess = true;
+					$timeout(function() {
+					    $scope.loadSuccess = false;
+					}, 3000);
+				} else {
+					console.log("Error Pension callback, response data [" + JSON.stringify(response.data) + "]");
+				}
+			  }, function errorCallback(response) {
+				console.log("Error Pension callback, response [" + response + "]");
+				transactionScope.loadFailed = true;
+				$timeout(function() {
+				    $scope.loadFailed = false;
+				}, 3000);
+			  })
+			.finally(function(){
+				transactionScope.loading = false;
+			});
+		}
+
+		transactionScope.initialize = function() {
+			transactionScope.loading = false;
+			transactionScope.loadSuccess = false;
+			transactionScope.loadFailed = false;
+			transactionScope.hideShow();
+			transactionScope.requestPension(transactionScope.id);
+			//FOR TESTING UNTIL API IS READY
+			transactionScope.pension = [];
 		}
 
 		pensionScope.initialize();
