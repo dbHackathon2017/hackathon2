@@ -274,6 +274,7 @@ mainApp.controller("pensionsController",["$scope", "$routeParams", "$timeout", "
 					pensionsScope.loadSuccess = true;
 				} else {
 					console.log("Error Pensions callback, response data [" + JSON.stringify(response.data) + "]");
+					pensionsScope.loadFailed = true;
 				}
 			  }, function errorCallback(response) {
 				console.log("Error Pensions callback, response [" + response + "]");
@@ -359,6 +360,7 @@ mainApp.controller("pensionController",["$scope", "$routeParams", "$timeout", "$
 					pensionScope.loadSuccess = true;
 				} else {
 					console.log("Error Pension callback, response data [" + JSON.stringify(response.data) + "]");
+					pensionsScope.loadFailed = true;
 				}
 			  }, function errorCallback(response) {
 				console.log("Error Pension callback, response [" + response + "]");
@@ -496,6 +498,7 @@ mainApp.controller("transactionController",["$scope", "$routeParams", "$timeout"
 					}, 3000);
 				} else {
 					console.log("Error Transaction callback, response data [" + JSON.stringify(response.data) + "]");
+					pensionsScope.loadFailed = true;
 				}
 			  }, function errorCallback(response) {
 				console.log("Error Transaction callback, response [" + response + "]");
@@ -564,6 +567,7 @@ mainApp.controller("documentController",["$scope", "$routeParams", "$timeout", "
 					}, 3000);
 				} else {
 					console.log("Error Document callback, response data [" + JSON.stringify(response.data) + "]");
+					pensionsScope.loadFailed = true;
 				}
 			  }, function errorCallback(response) {
 				console.log("Error Document callback, response [" + response + "]");
