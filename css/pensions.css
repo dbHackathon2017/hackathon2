@@ -23,3 +23,33 @@
   opacity: 1;
   padding: 10px;
 }
+
+table.scroll {
+    /* border-collapse: collapse; */
+    border-spacing: 0;
+}
+
+table.scroll tbody,
+table.scroll thead { display: block; }
+
+thead tr th { 
+    height: 30px;
+    line-height: 30px;
+    /*text-align: left;*/
+}
+
+table.scroll tbody {
+    height: 100px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+tbody {  }
+
+tbody td, thead th {
+    width: 20%; /* Optional */
+}
+
+tbody td:last-child, thead th:last-child {
+    border-right: none;
+}

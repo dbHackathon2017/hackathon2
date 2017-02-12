@@ -1,3 +1,29 @@
+<style>
+.table-scroll thead {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.table-scroll tbody {
+    max-height: 150px;
+    overflow-y: auto;
+    display: block;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.table-scroll tr {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+}
+
+.table-scroll td {
+    height: 47px; // needed in order to keep rows from collapsing
+}
+</style>
+
 <div class="container">
   <div class="row">
     <div class="container">
@@ -104,14 +130,30 @@
       <td>{{ d.valchange }}</td>
       <td>{{ d.docs.length }}</td>
     </tr>
-  </table>
-  <div ng-if="pension.pension.transactions.length <= 0">
-    <p class="alert alert-info">There are no Transactions to show.</p>
-  </div>
-</ul>
+  </tbody>
+</table>
+<div ng-if="pension.pension.transactions.length <= 0">
+  <p class="alert alert-info">There are no Transactions to show.</p>
+</div>
 
 <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 <!--!!!!!!!!!!CHARTS SECTION!!!!!!!!!!!! -->
 <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 <canvas id="myChart" width="400" height="150"></canvas>
 </div>
+
+<script>
+  var $table = $('table.scroll'),
+  $bodyCells = $table.find('tbody tr:first').children(),
+  colWidth;
+
+    // Adjust the width of thead cells when window resizes
+    $(window).resize(function() {
+        // Set the width of thead columns
+        $table.find('thead tr').children().each(function(i, v) {
+            //$(v).width("20px");
+            val = $(v).attr("mywidth") / 100 * $table.width()
+            $(v).width(val + "px");
+          }); 
+    }).resize(); // Trigger resize handler
+  </script>
