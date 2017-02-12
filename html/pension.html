@@ -1,27 +1,27 @@
 <style>
-.table-scroll thead {
+  .table-scroll thead {
     display: table;
     width: 100%;
     table-layout: fixed;
-}
+  }
 
-.table-scroll tbody {
+  .table-scroll tbody {
     max-height: 150px;
     overflow-y: auto;
     display: block;
     width: 100%;
     table-layout: fixed;
-}
+  }
 
-.table-scroll tr {
+  .table-scroll tr {
     display: table;
     table-layout: fixed;
     width: 100%;
-}
+  }
 
-.table-scroll td {
+  .table-scroll td {
     height: 47px; // needed in order to keep rows from collapsing
-}
+  }
 </style>
 
 <div class="container">
@@ -76,7 +76,7 @@
   </div>
   <hr />
   <div class="row clearfix">
-    <div class="col-md-6 column">
+    <div class="col-md-5 column">
       <div ng-if="$parent.isCompany">
         <div class="alert alert-success" ng-show="pension.header.active">
           Active: This pension chain is active
@@ -93,6 +93,13 @@
           Savings: This is a savings pension account
         </div>
       </div>
+    </div>
+    <div class="col-md-1 column">
+      <form role="form">
+        <div class="form-group">
+        <button class="btn btn-default form-group">Refresh</button>
+        </div>
+      </form>
     </div>
     <div class="col-md-5 column">
       <form role="form">

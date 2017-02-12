@@ -1,6 +1,6 @@
 var COOKIE_LOGGED_IN = "loggedIn";
 var COOKIE_USER_NAME = "username";
-var mainApp=angular.module("pensionApp",["ngRoute","ngCookies","anguFixedHeaderTable"]);
+var mainApp=angular.module("pensionApp",["ngRoute","ngCookies"]);
 var PAGE_NAMES = ["Pensions Page", "Single Pension Page", "Transactions Page", "Document Page"]
 
 var checkRouting = ["$cookies", "$location", function($cookies, $location) {
