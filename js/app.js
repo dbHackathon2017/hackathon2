@@ -1,6 +1,7 @@
 var COOKIE_LOGGED_IN = "loggedIn";
 var COOKIE_USER_NAME = "username";
 var mainApp=angular.module("pensionApp",["ngRoute","ngCookies"]);
+var PAGE_NAMES = ["Pensions Page", "Single Pension Page", "Transactions Page", "Document Page"]
 
 var checkRouting = ["$cookies", "$location", function($cookies, $location) {
 	var val = ($cookies.get(COOKIE_LOGGED_IN) == null ? "false" : $cookies.get(COOKIE_LOGGED_IN));
@@ -106,6 +107,35 @@ mainApp.controller("indexController",["$scope", "$routeParams", "$timeout", "$lo
 		indexScope.notLoggedIn = false;
 		indexScope.breadcrumbs = [];
 
+		indexScope.setBreadCrumbs = function(index) {
+			indexScope.breadcrumbs = [];
+			var split = $location.url().split("/");
+			if (index >= 0) {
+				indexScope.breadcrumbs.push({
+					path: "#/" + split[1],
+					name: PAGE_NAMES[0]
+				});
+			}
+			if (index >= 1) {
+				indexScope.breadcrumbs.push({
+					path: "#/" + split[1] + "/" + split[2],
+					name: PAGE_NAMES[1]
+				});
+			}
+			if (index >= 2) {
+				indexScope.breadcrumbs.push({
+					path: "#/" + split[1] + "/" + split[2] + "/" + split[3],
+					name: PAGE_NAMES[2]
+				});
+			}
+			if (index >= 3) {
+				indexScope.breadcrumbs.push({
+					path: "#/" + split[1] + "/" + split[2] + "/" + split[3] + "/" + split[4],
+					name: PAGE_NAMES[3]
+				});
+			}
+		}
+
 		indexScope.logout = function() {
 			indexScope.breadcrumbs = [];
 			indexScope.breadcrumbs.push({
@@ -161,12 +191,7 @@ mainApp.controller("pensionsController",["$scope", "$routeParams", "$timeout", "
 		var pensionThis = this;
 		var pensionsScope = $scope;
 
-		pensionsScope.$parent.breadcrumbs = [];
-
-		pensionsScope.$parent.breadcrumbs.push({
-			path: "#" + $location.url(),
-			name: "Pensions Page"
-		});
+		pensionsScope.$parent.setBreadCrumbs(0);
 
 		if (pensionsScope.$parent.isCompany) {
 			pensionsScope.hidePen = {
@@ -292,20 +317,7 @@ mainApp.controller("pensionController",["$scope", "$routeParams", "$timeout", "$
 		var pensionScope = $scope;
 		pensionScope.id = $routeParams.id
 
-		if (pensionScope.$parent.breadcrumbs.length > 2) {
-			pensionScope.$parent.breadcrumbs.splice(2);
-		} else {
-			if (pensionScope.$parent.breadcrumbs.length == 0) {
-				pensionScope.$parent.breadcrumbs.push({
-					path: "#/",
-					name: "Pensions Page"
-				});
-			}
-			pensionScope.$parent.breadcrumbs.push({
-				path: "#" + $location.url(),
-				name: "Pension Page"
-			});
-		}
+		pensionScope.$parent.setBreadCrumbs(1);
 
 		pensionScope.goBack = function() {
 			$location.path("/pensions");
@@ -369,32 +381,35 @@ mainApp.controller("pensionController",["$scope", "$routeParams", "$timeout", "$
 			var ctx = $('#myChart');
 			var data = [],
 				labels = [],
-				pointBorderColors = [];
+				pointBorderColors = []
+				pointBackgroundColors = [];
 			var amount = pensionScope.pension.pension.value.substring(1);
 			var transactions = pensionScope.pension.pension.transactions;
 			for (var i = transactions.length-1; i >= 0; i--) {
 				switch(transactions[i].usertype) {
 					case "Chain Liquidation":
-						data.push((amount - transactions[i].valchange.substring(1)));
+						data.push(amount = (parseFloat(amount) + parseFloat(transactions[i].valchange.substring(1))));
 						pointBorderColors.push("rgba(255,0,0,1)");
 					break;
-					case "Document Change":
-						data.push(amount.substring(1));
-						pointBorderColors.push("rgba(75,192,192,1)");
-					break;
 					case "Widthdraw":
-						data.push((amount - transactions[i].valchange.substring(1)));
+						data.push(amount = (parseFloat(amount) + parseFloat(transactions[i].valchange.substring(1))));
 						pointBorderColors.push("rgba(255,0,0,1)");
 					break;
 					case "Deposit":
-						data.push((amount - transactions[i].valchange.substring(1)));
+						data.push(amount = (parseFloat(amount) + parseFloat(transactions[i].valchange.substring(1))));
 						pointBorderColors.push("rgba(13,255,170,1)");
 					break;
 					case "Merge Finalized":
-						data.push((amount - transactions[i].valchange.substring(1)));
+						data.push(amount = (parseFloat(amount) + parseFloat(transactions[i].valchange.substring(1))));
 						pointBorderColors.push("rgba(255,0,0,1)");
 					break;
+					default:
+						data.push(amount = (parseFloat(amount) + parseFloat(transactions[i].valchange.substring(1))));
+						pointBorderColors.push("rgba(75,192,192,1)");
+					break;
 				}
+				// Add in WHITE as background color
+				pointBackgroundColors.push("rgba(255,255,255,1)");
 				labels.push(transactions[i].timestamp);
 			}
 			console.log(data);
@@ -412,7 +427,7 @@ mainApp.controller("pensionController",["$scope", "$routeParams", "$timeout", "$
 			            borderCapStyle: 'butt',
 			            borderJoinStyle: 'miter',
 			            pointBorderColor: pointBorderColors,
-			            pointBackgroundColor: "#fff",
+			            pointBackgroundColor: pointBackgroundColors,
 			            pointBorderWidth: 1,
 			            pointRadius: 5,
 			            pointHitRadius: 10,
@@ -448,20 +463,8 @@ mainApp.controller("transactionController",["$scope", "$routeParams", "$timeout"
 		transactionScope.id = $routeParams.id;
 		transactionScope.transId = $routeParams.transId;
 
-		if (transactionScope.$parent.breadcrumbs.length > 3) {
-			transactionScope.$parent.breadcrumbs.splice(3);
-		} else {
-			if (transactionScope.$parent.breadcrumbs.length == 0) {
-				transactionScope.$parent.breadcrumbs.push({
-					path: "#/",
-					name: "Pensions Page"
-				});
-			}
-			transactionScope.$parent.breadcrumbs.push({
-				path: "#" + $location.url(),
-				name: "Transaction Page"
-			});
-		}
+		transactionScope.$parent.setBreadCrumbs(2);
+
 
 		transactionScope.requestTransaction = function(transId) {
 			transactionScope.loading = true;
@@ -529,20 +532,7 @@ mainApp.controller("documentController",["$scope", "$routeParams", "$timeout", "
 		documentScope.transId = $routeParams.transId;
 		documentScope.docId = $routeParams.docId;
 
-		if (documentScope.$parent.breadcrumbs.length > 4) {
-			documentScope.$parent.breadcrumbs.splice(4);
-		} else {
-			if (documentScope.$parent.breadcrumbs.length == 0) {
-				documentScope.$parent.breadcrumbs.push({
-					path: "#/",
-					name: "Pensions Page"
-				});
-			}
-			documentScope.$parent.breadcrumbs.push({
-				path: "#" + $location.url(),
-				name: "Document Page"
-			});
-		}
+		documentScope.$parent.setBreadCrumbs(3);
 
 		documentScope.requestDocument = function(transId, documentId) {
 			documentScope.loading = true;

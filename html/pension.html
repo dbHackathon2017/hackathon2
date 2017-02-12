@@ -86,7 +86,7 @@
 <p class="alert alert-info" ng-model="loading" ng-show="loading">Loading Pension...</p>
 <p class="alert alert-success" ng-model="loadSuccess" ng-show="loadSuccess && !loading">Pension loaded</p>
 <p class="alert alert-success" ng-model="loadFailed" ng-show="loadFailed && !loading">Failed to load pensions</p>
-<table class="table table-hover">
+<table class="table table-hover" ng-if="pension.pension.transactions.length > 0">
   <thead>
     <tr>
       <th>Timestamp</th>
@@ -105,6 +105,9 @@
       <td>{{ d.docs.length }}</td>
     </tr>
   </table>
+  <div ng-if="pension.pension.transactions.length <= 0">
+    <p class="alert alert-info">There are no Transactions to show.</p>
+  </div>
 </ul>
 
 <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->

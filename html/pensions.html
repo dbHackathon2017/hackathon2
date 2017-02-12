@@ -14,9 +14,8 @@
 				<td>{{company.totaltransaction}}</td>
 				<td>{{company.value}}</td>
 			</tr>
-
-		</table>
-
+		</tbody>
+	</table>
 	<hr/>
 	<h2>Pensions</h2>
 	<p>These are all the current pensions in the log for person</p>
@@ -31,36 +30,37 @@
 		<label>
 			Show Pensions:
 			<div class="container btn-group" id="pension-state">
-					<input type="radio" name="state" ng-click="hidePensions(null)" checked>{{hidePen.third}}
-					<input type="radio" name="state" ng-click="hidePensions(false)">{{hidePen.second}}
-					<input type="radio" name="state" ng-click="hidePensions(true)">{{hidePen.first}}
+				<input type="radio" name="state" ng-click="hidePensions(null)" checked>{{hidePen.third}}
+				<input type="radio" name="state" ng-click="hidePensions(false)">{{hidePen.second}}
+				<input type="radio" name="state" ng-click="hidePensions(true)">{{hidePen.first}}
 				<button class="btn btn-default form-group pull-right" ng-click="requestAll()">Refresh</button>
 			</div>
 		</label>
 	</div>
-<div class="row">
-	<div class="container">
-	<table class="table table-hover">
-		<thead>
-			<tr>
-				<th>State</th>
-				<th>Firstname</th>
-				<th>Lastname</th>
-				<th>Account Number</th>
-				<th># Transactions</th>
-				<th>Last Transaction</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="a in accounts" class="pensions" ng-click="goToPension(a.id)" ng-hide="a.active === hidePension">
-				<td>{{ getState(a.active) }}</td>
-				<td>{{ a.firstname }}</td>
-				<td>{{ a.lastname }}</td>
-				<td>{{ a.acct }}</td>
-				<td>{{ a.totaltransactions }}</td>
-				<td>{{ a.lastint }}</td>
-			</tr>
-		</table>
-		</div>
+	<div class="row">
+		<div class="container">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>State</th>
+						<th>Firstname</th>
+						<th>Lastname</th>
+						<th>Account Number</th>
+						<th># Transactions</th>
+						<th>Last Transaction</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="a in accounts" class="pensions" ng-click="goToPension(a.id)" ng-hide="a.active === hidePension">
+						<td>{{ getState(a.active) }}</td>
+						<td>{{ a.firstname }}</td>
+						<td>{{ a.lastname }}</td>
+						<td>{{ a.acct }}</td>
+						<td>{{ a.totaltransactions }}</td>
+						<td>{{ a.lastint }}</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
+</div>
