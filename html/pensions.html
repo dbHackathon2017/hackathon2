@@ -20,11 +20,9 @@
 	<h2>Pensions</h2>
 	<p>These are all the current pensions in the log for person</p>
 	<div class="row">
-		<div class="container">
-			<p class="alert alert-info" ng-model="loading" ng-show="loading">Loading Pensions...</p>
-			<p class="alert alert-success" ng-model="loadSuccess" ng-show="loadSuccess && !loading">Pensions loaded</p>
-			<p class="alert alert-success" ng-model="loadFailed" ng-show="loadFailed && !loading">Failed to load pensions</p>
-		</div>
+		<p class="alert alert-info" ng-model="loading" ng-show="loading">Loading Pensions...</p>
+		<p class="alert alert-success" ng-model="loadSuccess" ng-show="loadSuccess && !loading">Pensions loaded</p>
+		<p class="alert alert-error" ng-model="loadFailed" ng-show="loadFailed">Failed to load pensions</p>
 	</div>
 	<div class="row">
 		<label>

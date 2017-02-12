@@ -94,13 +94,6 @@
         </div>
       </div>
     </div>
-    <div class="col-md-1 column">
-      <form role="form">
-        <div class="form-group">
-        <button class="btn btn-default form-group">Refresh</button>
-        </div>
-      </form>
-    </div>
     <div class="col-md-5 column">
       <form role="form">
         <div class="form-group">
@@ -115,10 +108,17 @@
       </div>
     </form>
   </div>
+  <div class="col-md-1 column">
+    <form role="form">
+      <div class="form-group">
+      <button class="btn btn-default form-group" ng-click="requestPension(id)">Refresh</button>
+      </div>
+    </form>
+  </div>
 </div>
 <p class="alert alert-info" ng-model="loading" ng-show="loading">Loading Pension...</p>
 <p class="alert alert-success" ng-model="loadSuccess" ng-show="loadSuccess && !loading">Pension loaded</p>
-<p class="alert alert-success" ng-model="loadFailed" ng-show="loadFailed && !loading">Failed to load pensions</p>
+<p class="alert alert-error" ng-model="loadFailed" ng-show="loadFailed">Failed to load pensions</p>
 <table class="table table-hover" ng-if="pension.pension.transactions.length > 0">
   <thead>
     <tr>

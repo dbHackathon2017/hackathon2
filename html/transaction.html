@@ -44,7 +44,7 @@
   <hr />
   <p class="alert alert-info" ng-model="loading" ng-show="loading">Loading Pension...</p>
   <p class="alert alert-success" ng-model="loadSuccess" ng-show="loadSuccess && !loading">Pensions loaded</p>
-  <p class="alert alert-success" ng-model="loadFailed" ng-show="loadFailed && !loading">Failed to load pensions</p>
+  <p class="alert alert-error" ng-model="loadFailed" ng-show="loadFailed">Failed to load pensions</p>
   <table class="table table-hover" ng-if="transaction.docs.length > 0">
     <thead>
       <tr>

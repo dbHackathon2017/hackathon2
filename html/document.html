@@ -38,7 +38,7 @@
   </div>
   <p class="alert alert-info" ng-model="loading" ng-show="loading">Loading Document...</p>
   <p class="alert alert-success" ng-model="loadSuccess" ng-show="loadSuccess && !loading">Document loaded</p>
-  <p class="alert alert-success" ng-model="loadFailed" ng-show="loadFailed && !loading">Failed to load pensions</p>
+  <p class="alert alert-success" ng-model="loadFailed" ng-show="loadFailed">Failed to load Document</p>
   <hr />
   <div class="row" style="text-align: center;">
     <object data="{{document.path}}" type="application/pdf" width="800px" height="1200px">
