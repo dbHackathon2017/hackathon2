@@ -5,14 +5,19 @@
 			<tr>
 				<th>Total Pensions</th>
 				<th>Total Transactions</th>
-				<th>Total Value</th>
+				<th ng-show="$parent.isCompany">Total Value</th>
+				<th ng-show="!$parent.isCompany">Income Amount</th>
+				<th ng-show="!$parent.isCompany">Savings Amount</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr>
 				<td>{{company.totalpension}}</td>
 				<td>{{company.totaltransaction}}</td>
-				<td>{{company.value}}</td>
+				<td ng-show="$parent.isCompany">{{getValue()}}</td>
+				<td ng-show="!$parent.isCompany">{{company.incomevalue}}</td>
+				<td ng-show="!$parent.isCompany">{{company.savingsvalue}}</td>
+				{{$parent.isCompany}}
 			</tr>
 		</tbody>
 	</table>

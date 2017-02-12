@@ -242,6 +242,14 @@ mainApp.controller("pensionsController",["$scope", "$routeParams", "$timeout", "
 
 		pensionsScope.hidePension = "";
 
+		pensionsScope.getValue = function() {
+			if (pensionsScope.company != null && pensionsScope.company != undefined
+				 && pensionsScope.company != null && pensionsScope.company != undefined) {
+				return pensionsScope.company.incomevalue.substring(0,1) + (parseFloat(pensionsScope.company.incomevalue.substring(1)) + 
+					parseFloat(pensionsScope.company.savingsvalue.substring(1)));
+			}
+		}
+
 		pensionsScope.hidePensions = function(state) {
 			pensionsScope.hidePension = state;
 		}
@@ -365,7 +373,7 @@ mainApp.controller("pensionController",["$scope", "$routeParams", "$timeout", "$
 					pensionScope.loadSuccess = true;
 				} else {
 					console.log("Error Pension callback, response data [" + JSON.stringify(response.data) + "]");
-					pensionsScope.loadFailed = true;
+					pensionScope.loadFailed = true;
 				}
 			  }, function errorCallback(response) {
 				console.log("Error Pension callback, response [" + response + "]");
