@@ -145,3 +145,12 @@ body {
    display:table;
    margin:auto;
 }
+
+#breadcrumbs {
+  list-style-type: none;
+}
+
+#breadcrumbs li {
+  display: inline-block;
+  margin-right: 4px;
+}

@@ -55,8 +55,14 @@ mainApp.controller("indexController",["$scope", "$routeParams", "$timeout", "$lo
 	function($scope, $routeParams, $timeout, $location, $cookies){
 		var indexScope = $scope;
 		indexScope.notLoggedIn = false;
+		indexScope.breadcrumbs = [];
 
 		indexScope.logout = function() {
+			indexScope.breadcrumbs = [];
+			indexScope.breadcrumbs = push({
+				path: "#" + $location.url(),
+				name: "Login Page"
+			});
 			indexScope.notLoggedIn = true;
 			$cookies.put(COOKIE_LOGGED_IN, false);
 			$cookies.put(COOKIE_USER_NAME, "");
@@ -67,6 +73,12 @@ mainApp.controller("indexController",["$scope", "$routeParams", "$timeout", "$lo
 mainApp.controller("loginController",["$scope", "$routeParams", "$timeout", "$location", '$cookies',
 	function($scope, $routeParams, $timeout, $location, $cookies) {
 		var loginScope = $scope;
+
+		loginScope.$parent.breadcrumbs.push({
+			path: "#" + $location.url(),
+			name: "Login Page"
+		});
+
 		var val = ($cookies.get(COOKIE_LOGGED_IN) == null ? "false" : $cookies.get(COOKIE_LOGGED_IN));
 		if (val === "true") {
 			loginScope.$parent.notLoggedIn = false;
@@ -88,6 +100,7 @@ mainApp.controller("loginController",["$scope", "$routeParams", "$timeout", "$lo
 				loginScope.$parent.notLoggedIn = false;
 				loginScope.loading = false;
 				$cookies.put(COOKIE_LOGGED_IN, true);
+				loginScope.$parent.breadcrumbs = [];
 				$location.path("pensions");
 			}, 1400);
 		}
@@ -98,6 +111,13 @@ mainApp.controller("pensionsController",["$scope", "$routeParams", "$timeout", "
 	function($scope, $routeParams, $timeout, $location, $http, $cookies){
 		var pensionThis = this;
 		var pensionsScope = $scope;
+
+		pensionsScope.$parent.breadcrumbs = [];
+
+		pensionsScope.$parent.breadcrumbs.push({
+			path: "#" + $location.url(),
+			name: "Pensions Page"
+		});
 
 		if (pensionsScope.$parent.isCompany) {
 			pensionsScope.hidePen = {
@@ -222,6 +242,21 @@ mainApp.controller("pensionController",["$scope", "$routeParams", "$timeout", "$
 		var pensionScope = $scope;
 		pensionScope.id = $routeParams.id
 
+		if (pensionScope.$parent.breadcrumbs.length > 2) {
+			pensionScope.$parent.breadcrumbs.splice(2);
+		} else {
+			if (pensionScope.$parent.breadcrumbs.length == 0) {
+				pensionScope.$parent.breadcrumbs.push({
+					path: "#/",
+					name: "Pensions Page"
+				});
+			}
+			pensionScope.$parent.breadcrumbs.push({
+				path: "#" + $location.url(),
+				name: "Pension Page"
+			});
+		}
+
 		pensionScope.goBack = function() {
 			$location.path("/pensions");
 		}
@@ -300,6 +335,21 @@ mainApp.controller("transactionController",["$scope", "$routeParams", "$timeout"
 		transactionScope.id = $routeParams.id;
 		transactionScope.transId = $routeParams.transId;
 
+		if (transactionScope.$parent.breadcrumbs.length > 3) {
+			transactionScope.$parent.breadcrumbs.splice(3);
+		} else {
+			if (transactionScope.$parent.breadcrumbs.length == 0) {
+				transactionScope.$parent.breadcrumbs.push({
+					path: "#/",
+					name: "Pensions Page"
+				});
+			}
+			transactionScope.$parent.breadcrumbs.push({
+				path: "#" + $location.url(),
+				name: "Transaction Page"
+			});
+		}
+
 		transactionScope.requestTransaction = function(transId) {
 			transactionScope.loading = true;
 			transactionScope.loadSuccess = false;
@@ -365,6 +415,21 @@ mainApp.controller("documentController",["$scope", "$routeParams", "$timeout", "
 		documentScope.id = $routeParams.id;
 		documentScope.transId = $routeParams.transId;
 		documentScope.docId = $routeParams.docId;
+
+		if (documentScope.$parent.breadcrumbs.length > 4) {
+			documentScope.$parent.breadcrumbs.splice(4);
+		} else {
+			if (documentScope.$parent.breadcrumbs.length == 0) {
+				documentScope.$parent.breadcrumbs.push({
+					path: "#/",
+					name: "Pensions Page"
+				});
+			}
+			documentScope.$parent.breadcrumbs.push({
+				path: "#" + $location.url(),
+				name: "Document Page"
+			});
+		}
 
 		documentScope.requestDocument = function(transId, documentId) {
 			documentScope.loading = true;
