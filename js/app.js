@@ -298,8 +298,13 @@ mainApp.controller("pensionsController",["$scope", "$routeParams", "$timeout", "
 			console.log("Pensions Auto Request");
 			pensionsScope.requestAll();
 			pensionsScope.requestCompStats();
-			$timeout(pensionsScope.autoTimerRequest, 5000);
+			pensionsScope.pensionsPromise = $timeout(pensionsScope.autoTimerRequest, 5000);
 		}
+
+		pensionsScope.$on('$destroy', function(){
+			console.log("Canceling Pensions Promise");
+		    $timeout.cancel(pensionsScope.pensionsPromise);
+		});
 
 		pensionsScope.initialize = function() {
 			pensionsScope.loading = false;
@@ -446,8 +451,14 @@ mainApp.controller("pensionController",["$scope", "$routeParams", "$timeout", "$
 		pensionScope.autoTimerRequest = function() {
 			console.log("Pension Auto Request");
 			pensionScope.requestPension(pensionScope.id);
-			$timeout(pensionScope.autoTimerRequest, 5000);
+			pensionScope.pensionPromise = $timeout(pensionScope.autoTimerRequest, 5000);
 		}
+
+
+		pensionScope.$on('$destroy', function(){
+			console.log("Canceling Pension Promise Destroy");
+		    $timeout.cancel(pensionScope.pensionPromise);
+		});
 
 
 		pensionScope.initialize = function() {
