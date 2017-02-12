@@ -51,6 +51,55 @@ mainApp.config(['$routeProvider', '$locationProvider', function($routeProvider, 
 	});
 }]);
 
+var checkRouting = ["$cookies", "$location", function($cookies, $location) {
+	var val = ($cookies.get(COOKIE_LOGGED_IN) == null ? "false" : $cookies.get(COOKIE_LOGGED_IN));
+	if (val === "false") {
+		$location.path("/");
+	}
+	return true;
+}];
+
+mainApp.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
+	$routeProvider
+	.when("/", {
+		templateUrl : "html/login.html",
+		controller : "loginController",
+	})
+	.when("/pensions", {
+		templateUrl : "html/pensions.html",
+		controller : "pensionsController",
+		resolve: {
+	            factory: checkRouting
+                }
+	})
+	.when("/pension/:id", {
+		templateUrl : "html/pension.html",
+		controller : "pensionController",
+		resolve: {
+	            factory: checkRouting
+                }
+	})
+	.when("/pension/:id/:transId", {
+		templateUrl : "html/transaction.html",
+		controller : "transactionController",
+		resolve: {
+	            factory: checkRouting
+                }
+	})
+	.when("/pension/:id/:transId/:docId", {
+		templateUrl : "html/document.html",
+		controller : "documentController",
+		resolve: {
+	            factory: checkRouting
+                }
+	})
+	.otherwise({ redirectTo: '/' });
+	$locationProvider.html5Mode({
+		enabled: false,
+		requireBase: false
+	});
+}]);
+
 mainApp.controller("indexController",["$scope", "$routeParams", "$timeout", "$location", "$cookies",
 	function($scope, $routeParams, $timeout, $location, $cookies){
 		var indexScope = $scope;
@@ -59,7 +108,7 @@ mainApp.controller("indexController",["$scope", "$routeParams", "$timeout", "$lo
 
 		indexScope.logout = function() {
 			indexScope.breadcrumbs = [];
-			indexScope.breadcrumbs = push({
+			indexScope.breadcrumbs.push({
 				path: "#" + $location.url(),
 				name: "Login Page"
 			});
@@ -136,8 +185,9 @@ mainApp.controller("pensionsController",["$scope", "$routeParams", "$timeout", "
 			pensionsScope.loading = true;
 			pensionsScope.loadSuccess = false;
 			pensionsScope.loadFailed = false;
+			var request = (pensionsScope.$parent.isCompany ? "all-pensions" : "all-pensions-user");
 			var jsonTest = {
-				"request": "all-pensions",
+				"request": request,
 				"data": "",
 			}
 			$http({
@@ -294,6 +344,7 @@ mainApp.controller("pensionController",["$scope", "$routeParams", "$timeout", "$
 					$timeout(function() {
 					    $scope.loadSuccess = false;
 					}, 3000);
+					pensionScope.initMap();
 				} else {
 					console.log("Error Pension callback, response data [" + JSON.stringify(response.data) + "]");
 				}
@@ -312,6 +363,68 @@ mainApp.controller("pensionController",["$scope", "$routeParams", "$timeout", "$
 		pensionScope.goToTransaction = function (transaction) {
 			console.log(transaction)
 			$location.path($location.url() + "/" + transaction);
+		}
+
+		pensionScope.initMap = function(){
+			var ctx = $('#myChart');
+			var data = [],
+				labels = [],
+				pointBorderColors = [];
+			var amount = pensionScope.pension.pension.value.substring(1);
+			var transactions = pensionScope.pension.pension.transactions;
+			for (var i = transactions.length-1; i >= 0; i--) {
+				switch(transactions[i].usertype) {
+					case "Chain Liquidation":
+						data.push((amount - transactions[i].valchange.substring(1)));
+						pointBorderColors.push("rgba(255,0,0,1)");
+					break;
+					case "Document Change":
+						data.push(amount.substring(1));
+						pointBorderColors.push("rgba(75,192,192,1)");
+					break;
+					case "Widthdraw":
+						data.push((amount - transactions[i].valchange.substring(1)));
+						pointBorderColors.push("rgba(255,0,0,1)");
+					break;
+					case "Deposit":
+						data.push((amount - transactions[i].valchange.substring(1)));
+						pointBorderColors.push("rgba(13,255,170,1)");
+					break;
+					case "Merge Finalized":
+						data.push((amount - transactions[i].valchange.substring(1)));
+						pointBorderColors.push("rgba(255,0,0,1)");
+					break;
+				}
+				labels.push(transactions[i].timestamp);
+			}
+			console.log(data);
+			console.log(labels);
+			console.log(pointBorderColors);
+			var data = {
+			    labels: labels,
+			    datasets: [
+			        {
+			            label: "Value Amount History",
+			            fill: true,
+			            lineTension: 0.0,
+			            backgroundColor: "rgba(75,192,192,0.4)",
+			            borderColor: "rgba(75,192,192,1)",
+			            borderCapStyle: 'butt',
+			            borderJoinStyle: 'miter',
+			            pointBorderColor: pointBorderColors,
+			            pointBackgroundColor: "#fff",
+			            pointBorderWidth: 1,
+			            pointRadius: 5,
+			            pointHitRadius: 10,
+			            spanGaps: false,
+			    		data: data,
+			        }
+			    ]
+			};
+			var myChart = new Chart(ctx, {
+					type: 'line',
+					data: data
+			});
 		}
 
 
