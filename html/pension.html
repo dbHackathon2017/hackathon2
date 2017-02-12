@@ -119,14 +119,14 @@
 <p class="alert alert-info" ng-model="loading" ng-show="loading">Loading Pension...</p>
 <p class="alert alert-success" ng-model="loadSuccess" ng-show="loadSuccess && !loading">Pension loaded</p>
 <p class="alert alert-error" ng-model="loadFailed" ng-show="loadFailed">Failed to load pensions</p>
-<table class="table table-hover" ng-if="pension.pension.transactions.length > 0">
+<table class="table table-hover scroll" ng-if="pension.pension.transactions.length > 0">
   <thead>
     <tr>
-      <th>Timestamp</th>
-      <th>Hash</th>
-      <th>Transaction Type</th>
-      <th>Value Change</th>
-      <th>Doc Amount</th>
+      <th mywidth="20">Timestamp</th>
+      <th mywidth="20">Hash</th>
+      <th mywidth="20">Transaction Type</th>
+      <th mywidth="20">Value Change</th>
+      <th mywidth="20">Doc Amount</th>
     </tr>
   </thead>
   <tbody>
